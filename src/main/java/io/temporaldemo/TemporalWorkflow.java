@@ -4,6 +4,7 @@ import io.temporal.activity.ActivityCancellationType;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.failure.ActivityFailure;
 import io.temporal.failure.ApplicationFailure;
+import io.temporal.failure.CanceledFailure;
 import io.temporal.workflow.Async;
 import io.temporal.workflow.CancellationScope;
 import io.temporal.workflow.Promise;
@@ -36,7 +37,8 @@ public class TemporalWorkflow implements TemporalWorkflowInterface {
         try {
             return activityPromise.get();
         } catch (ActivityFailure e) {
-            System.out.println("Activity Failure: " + e.getOriginalMessage());
+            CanceledFailure c = (CanceledFailure) e.getCause();
+            System.out.println("Canceled Failure: " + e.getMessage());
             return "canceledresults";
         }
     }
